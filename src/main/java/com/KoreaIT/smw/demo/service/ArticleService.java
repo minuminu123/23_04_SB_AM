@@ -1,6 +1,5 @@
 package com.KoreaIT.smw.demo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,15 @@ public class ArticleService {
 
 	public ArticleService(ArticleRepository articleRepository) {
 		this.articleRepository = articleRepository;
-		articleRepository.makeTestData();
 	}
 
 	// 서비스 메서드
-	public Article writeArticle(String title, String body) {
-		return articleRepository.writeArticle(title, body);
+	public int writeArticle(String title, String body) {
+		
+		articleRepository.writeArticle(title, body);
+		
+		return articleRepository.getLastInsertId();
+		
 	}
 
 	public Article getArticle(int id) {
