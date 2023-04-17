@@ -1,5 +1,6 @@
 package com.KoreaIT.smw.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.KoreaIT.smw.demo.repository.MemberRepository;
@@ -7,6 +8,7 @@ import com.KoreaIT.smw.demo.repository.MemberRepository;
 @Service
 public class MemberService {
 
+	
 	private MemberRepository memberRepository;
 
 	public MemberService(MemberRepository memberRepository) {
