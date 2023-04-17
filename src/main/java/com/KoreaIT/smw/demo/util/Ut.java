@@ -16,4 +16,9 @@ public class Ut {
 
 		return str.trim().length() == 0;
 	}
+	// Object... args: 가변인자
+	public static String f(String format, Object... args) {
+		
+		return String.format(format, args);
+	}
 }
