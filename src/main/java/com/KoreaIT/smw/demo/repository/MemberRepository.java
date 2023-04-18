@@ -48,6 +48,6 @@ public interface MemberRepository {
 			WHERE name = #{name} AND
 			email = #{email}
 			""")
-	Member getMemberByNameEmail(String name, String email);
+	Member getMemberByNameAndEmail(String name, String email);
 
 }
