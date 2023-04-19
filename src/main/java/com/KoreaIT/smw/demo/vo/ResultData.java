@@ -9,7 +9,6 @@ public class ResultData<DT> {
 	private String msg;
 	@Getter
 	private DT data1;
-
 	@Getter
 	private String data1Name;
 
