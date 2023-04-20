@@ -1,9 +1,11 @@
 package com.KoreaIT.smw.demo.controller;
 
+import java.io.IOException;
 import java.net.http.HttpRequest;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +27,10 @@ public class UsrArticleController {
 	private ArticleService articleService;
 
 	// 액션메서드
-	@RequestMapping("/usr/article/doModify")
-	@ResponseBody
-	public ResultData<Integer> doModify(HttpSession httpSession, int id, String title, String body) {
+	@RequestMapping("/usr/article/modify")
+	
+	public String doModify(HttpSession httpSession, int id, String title, String body, HttpServletResponse response, Model model) throws IOException {
+		response.setContentType("text/html; charset=UTF-8");
 		boolean isLogined = false;
 		int loginedMemberId = 0;
 
@@ -37,27 +40,37 @@ public class UsrArticleController {
 		}
 
 		if (isLogined == false) {
-			return ResultData.from("F-A", "로그인 후 이용해주세요");
+			response.getWriter().append(
+					String.format("<script>alert('로그인 후 이용해주세요'); history.back();</script>"));
 		}
 
 		Article article = articleService.getArticle(id);
 		if (article == null) {
-			return ResultData.from("F-1", Ut.f("%d번 글은 존재하지 않습니다", id), "id", id);
+			response.getWriter().append(
+					String.format("<script>alert('%d번글은 존재하지 않습니다'); history.back();</script>", id));
+			
 		}
 
-		ResultData actorCanModifyRd = articleService.actorCanModify(loginedMemberId, article);
+		else if (article.getMemberId() != loginedMemberId) {
+			response.getWriter().append(
+					String.format("<script>alert('%d번글에대한 권한이 없습니다'); history.back();</script>", id));
+		
 
-		if (actorCanModifyRd.isFail()) {
-			return actorCanModifyRd;
+		}
+		else {
+			articleService.modifyArticle(id, title, body);
+			model.addAttribute("article", article);
+			response.getWriter().append(
+					String.format("<script>alert('수정완료');location.replace('../article/list');</script>"));
 		}
 
-		return articleService.modifyArticle(id, title, body);
+		return "usr/article/modify";
 
 	}
 
 	@RequestMapping("/usr/article/doDelete")
-	@ResponseBody
-	public ResultData<Integer> doDelete(HttpSession httpSession, int id) {
+	public String doDelete(HttpSession httpSession, int id, HttpServletResponse response) throws IOException {
+		response.setContentType("text/html; charset=UTF-8");
 		boolean isLogined = false;
 		int loginedMemberId = 0;
 
@@ -67,21 +80,34 @@ public class UsrArticleController {
 		}
 
 		if (isLogined == false) {
-			return ResultData.from("F-A", "로그인 후 이용해주세요");
+			response.getWriter().append(
+					String.format("<script>alert('로그인 후 이용해주세요'); history.back();</script>"));
+
+
 		}
 
 		Article article = articleService.getArticle(id);
 		if (article == null) {
-			return ResultData.from("F-1", Ut.f("%d번 글은 존재하지 않습니다", id), "id", id);
+			response.getWriter().append(
+					String.format("<script>alert('%d번글은 존재하지 않습니다'); history.back();</script>", id));
+			
+
 		}
 
-		if (article.getMemberId() != loginedMemberId) {
-			return ResultData.from("F-2", Ut.f("%d번 글에 대한 권한이 없습니다", id));
+		else if (article.getMemberId() != loginedMemberId) {
+			response.getWriter().append(
+					String.format("<script>alert('%d번글에대한 권한이 없습니다'); history.back();</script>", id));
+		
+
 		}
+		else {
+			articleService.deleteArticle(id);
 
-		articleService.deleteArticle(id);
-
-		return ResultData.from("S-1", Ut.f("%d번 글을 삭제 했습니다", id), "id", id);
+		response.getWriter().append(
+				String.format("<script>alert('삭제완료');location.replace('../article/list');</script>"));
+			
+		}
+		return null;
 	}
 
 	@RequestMapping("/usr/article/doWrite")
