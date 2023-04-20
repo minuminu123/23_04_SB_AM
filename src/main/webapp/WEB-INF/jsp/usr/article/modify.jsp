@@ -3,10 +3,13 @@
 <c:set var="pageTitle" value="ARTICLE MODIFY" />
 <%@ include file="../common/head.jspf"%>
 <hr />
+<script>
 
-<form method="post" action="doModify">
+</script>
+
+<form method="post" action="modify">
 		
-		
+		<input value="${param.id }" type="hidden" name="id" />
 		<div>
 			제목 : <input value="${article.title }" type="text" name="title"
 				placeholder="제목을 입력해주세요" />

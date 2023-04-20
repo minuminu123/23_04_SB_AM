@@ -25,13 +25,8 @@
 														<td>
 																<a href="../article/detail?id=${article.id}">${article.title}</a>
 														</td>
-														<td>${article.writer}</td>
-														<td>
-															<a href="../article/modify?id=${article.id}">수정</a>
-														</td>
-														<td>
-															<a href="../article/doDelete?id=${article.id}">삭제</a>
-														</td>
+														<td>${article.extra__writer}</td>
+														
 												</tr>
 										</c:forEach>
 								</tbody>
