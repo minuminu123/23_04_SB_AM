@@ -22,6 +22,11 @@ public class NeedLoginInterceptor implements HandlerInterceptor {
 			rq.printHitoryBackJs("로그인 후 이용해 주세요");
 			return false;
 		}
+		
+		if(rq.isLogined() == true) {
+			rq.printHitoryBackJs("이미 로그인이 되어있습니다");
+			return false;
+		}
 
 		return HandlerInterceptor.super.preHandle(req, resp, handler);
 	}
