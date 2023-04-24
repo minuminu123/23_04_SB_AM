@@ -25,3 +25,11 @@ html > body {
 	text-decoration: underline;
 	color: deepskyblue;
 }
+
+.middle {
+	text-align: center;
+}
+
+.a-middle {
+	 margin: 0 auto;
+}
