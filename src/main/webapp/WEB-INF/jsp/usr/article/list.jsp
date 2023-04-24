@@ -15,10 +15,14 @@
 								</colgroup>
 								<thead>
 										<tr>
-												<th>번호</th>
-												<th>날짜</th>
-												<th>제목</th>
-												<th>작성자</th>
+												<th style="--tw-bg-opacity: 1;
+background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">번호</th>
+												<th style="--tw-bg-opacity: 1;
+background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">날짜</th>
+												<th style="--tw-bg-opacity: 1;
+background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">제목</th>
+												<th style="--tw-bg-opacity: 1;
+background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">작성자</th>
 										</tr>
 								</thead>
 
