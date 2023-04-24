@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.KoreaIT.smw.demo.service.ArticleService;
+import com.KoreaIT.smw.demo.service.BoardService;
 import com.KoreaIT.smw.demo.util.Ut;
 import com.KoreaIT.smw.demo.vo.Article;
+import com.KoreaIT.smw.demo.vo.Board;
 import com.KoreaIT.smw.demo.vo.ResultData;
 import com.KoreaIT.smw.demo.vo.Rq;
 
@@ -21,6 +23,8 @@ public class UsrArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private BoardService boardService;
 
 	@RequestMapping("/usr/article/modify")
 	public String showModify(HttpServletRequest req, Model model, int id) {
@@ -116,9 +120,18 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model) {
-		List<Article> articles = articleService.getForPrintArticles();
+	public String showList(HttpServletRequest req, Model model, int boardId) {
+		Rq rq = (Rq) req.getAttribute("rq");
 
+		Board board = boardService.getBoardById(boardId);
+		
+		if(board == null) {
+			return rq.jsHitoryBackOnView("그런 게시판은 존재하지 않습니다");
+		}
+
+		List<Article> articles = articleService.getForPrintArticles(boardId);
+
+		model.addAttribute("board", board);
 		model.addAttribute("articles", articles);
 
 		return "usr/article/list";

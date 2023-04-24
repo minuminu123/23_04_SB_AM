@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:set var="pageTitle" value="ARTICLE LIST" />
+<c:set var="pageTitle" value="${board.code}" />
 <%@ include file="../common/head.jspf"%>
 <hr />
 <section class="mt-8 text-xl">
@@ -15,14 +15,10 @@
 								</colgroup>
 								<thead>
 										<tr>
-												<th style="--tw-bg-opacity: 1;
-background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">번호</th>
-												<th style="--tw-bg-opacity: 1;
-background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">날짜</th>
-												<th style="--tw-bg-opacity: 1;
-background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">제목</th>
-												<th style="--tw-bg-opacity: 1;
-background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">작성자</th>
+												<th style="--tw-bg-opacity: 1; background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">번호</th>
+												<th style="--tw-bg-opacity: 1; background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">날짜</th>
+												<th style="--tw-bg-opacity: 1; background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">제목</th>
+												<th style="--tw-bg-opacity: 1; background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">작성자</th>
 										</tr>
 								</thead>
 
@@ -48,9 +44,9 @@ background-color: rgba(191, 219, 254, var(--tw-bg-opacity));">작성자</th>
 </section>
 &nbsp;
 <div class="middle">
-<c:if test="${rq.isLogined() }">
-		<a class="btn-text-link btn btn-active btn-ghost a-middle" href="../article/write">게시글 쓰기</a>
-</c:if>
+		<c:if test="${rq.isLogined() }">
+				<a class="btn-text-link btn btn-active btn-ghost a-middle" href="../article/write">게시글 쓰기</a>
+		</c:if>
 </div>
 
 <%@ include file="../common/foot.jspf"%>
