@@ -34,7 +34,7 @@ public interface ArticleRepository {
 			</script>
 				""")
 	public List<Article> getForPrintArticles(int boardId);
-	
+
 	@Select("""
 			SELECT *
 			FROM article
@@ -56,5 +56,17 @@ public interface ArticleRepository {
 	public void modifyArticle(int id, String title, String body);
 
 	public int getLastInsertId();
+
+	@Select("""
+			<script>
+			SELECT COUNT(*) AS cnt
+			FROM article AS A
+			WHERE 1
+			<if test="boardId != 0">
+				AND A.boardId = #{boardId}
+			</if>
+			</script>
+				""")
+	public int getArticlesCount(int boardId);
 
 }

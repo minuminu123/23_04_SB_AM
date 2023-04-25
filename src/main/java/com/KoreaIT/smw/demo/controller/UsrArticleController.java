@@ -23,6 +23,7 @@ public class UsrArticleController {
 
 	@Autowired
 	private ArticleService articleService;
+
 	@Autowired
 	private BoardService boardService;
 
@@ -55,18 +56,18 @@ public class UsrArticleController {
 		Article article = articleService.getArticle(id);
 
 		if (article == null) {
-			return Ut.jsHitoryBack("F-1", Ut.f("%d번 글은 존재하지 않습니다@", id));
+			return rq.jsHitoryBack("F-1", Ut.f("%d번 글은 존재하지 않습니다@", id));
 		}
 
 		ResultData actorCanModifyRd = articleService.actorCanModify(rq.getLoginedMemberId(), article);
 
 		if (actorCanModifyRd.isFail()) {
-			return Ut.jsHitoryBack(actorCanModifyRd.getResultCode(), actorCanModifyRd.getMsg());
+			return rq.jsHitoryBack(actorCanModifyRd.getResultCode(), actorCanModifyRd.getMsg());
 		}
 
 		articleService.modifyArticle(id, title, body);
 
-		return Ut.jsReplace(Ut.f("%d번 글을 수정 했습니다", id), Ut.f("../article/detail?id=%d", id));
+		return rq.jsReplace(Ut.f("%d번 글을 수정 했습니다", id), Ut.f("../article/detail?id=%d", id));
 	}
 
 	@RequestMapping("/usr/article/doDelete")
@@ -89,13 +90,11 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/write")
-
 	public String showWrite(HttpServletRequest req, String title, String body) {
-		Rq rq = (Rq) req.getAttribute("rq");
 
 		return "usr/article/write";
 	}
-	
+
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
 	public String doWrite(HttpServletRequest req, String title, String body, String replaceUri) {
@@ -124,14 +123,16 @@ public class UsrArticleController {
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		Board board = boardService.getBoardById(boardId);
-		
-		if(board == null) {
-			return rq.jsHitoryBackOnView("그런 게시판은 존재하지 않습니다");
+
+		if (board == null) {
+			return rq.jsHitoryBackOnView("없는 게시판이야");
 		}
 
+		int articlesCount = articleService.getArticlesCount(boardId);
 		List<Article> articles = articleService.getForPrintArticles(boardId);
 
 		model.addAttribute("board", board);
+		model.addAttribute("articlesCount", articlesCount);
 		model.addAttribute("articles", articles);
 
 		return "usr/article/list";
