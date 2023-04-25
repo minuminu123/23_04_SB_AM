@@ -32,7 +32,7 @@ public interface ArticleRepository {
 			</if>
 			
 			ORDER BY A.id DESC
-			<if test="limitFrom > 0">
+			<if test="limitFrom >= 0">
 				LIMIT #{limitFrom}, #{itemsInAPage}
 			</if>
 			</script>
