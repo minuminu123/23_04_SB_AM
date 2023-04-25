@@ -32,7 +32,9 @@ public interface ArticleRepository {
 			</if>
 			
 			ORDER BY A.id DESC
-			LIMIT #{limitFrom}, #{itemsInAPage}
+			<if test="limitFrom > 0">
+				LIMIT #{limitFrom}, #{itemsInAPage}
+			</if>
 			</script>
 				""")
 	public List<Article> getForPrintArticles(int boardId, int limitFrom, int itemsInAPage);

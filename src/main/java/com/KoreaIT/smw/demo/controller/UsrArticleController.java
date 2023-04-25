@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.KoreaIT.smw.demo.service.ArticleService;
@@ -27,7 +28,7 @@ public class UsrArticleController {
 	private Rq rq;
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, int boardId, int page) {
+	public String showList(Model model, @RequestParam(defaultValue= "1") int boardId, @RequestParam(defaultValue= "1") int page) {
 
 		int itemsInAPage = 10;
 		int totalPage = articleService.getTotalPage(boardId);
