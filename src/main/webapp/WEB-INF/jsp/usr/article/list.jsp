@@ -42,5 +42,34 @@
 		</div>
 	</div>
 </section>
+&nbsp;
+<div class="middle">
+<c:if test="${rq.isLogined() }">
+		<a class="btn-text-link btn btn-active btn-ghost a-middle" href="../article/write">게시글 쓰기</a>
+</c:if>
+</div>
+&nbsp;
+&nbsp;
+<div class="page">
 
+
+		
+		
+		<c:if test="${page  > 1}">
+		<a href="list?boardId=${board.id }&page=1">◀◀</a>
+		</c:if>
+		<c:if test="${from < 1 }">
+		from = 1;
+		</c:if>
+		<c:if test="${end > totalPage }">
+		end = totalPage;
+		</c:if>
+		<c:forEach var="index" varStatus="vs" begin="${from }" end="${end }" step="1">
+		<a href="list?boardId=${board.id }&page=${index }"><c:out value="${index}" /></a>
+		</c:forEach>
+		<c:if test="${page  < totalPage}">
+		<a href="list?boardId=${board.id }&page=${totalPage}">▶▶</a>
+		</c:if>
+
+	</div>
 <%@ include file="../common/foot.jspf"%>

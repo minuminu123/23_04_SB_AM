@@ -56,13 +56,13 @@
 								<label tabindex="0" class="btn m-1">Click</label>
 								<ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
 										<li class="hover:underline">
-												<a href="/usr/article/list?boardId=1">NOTICE</a>
+												<a href="/usr/article/list?boardId=1&page=1">NOTICE</a>
 										</li>
 										<li class="hover:underline">
-												<a href="/usr/article/list?boardId=2">FREE</a>
+												<a href="/usr/article/list?boardId=2&page=1">FREE</a>
 										</li>
 										<li class="hover:underline">
-												<a href="/usr/article/list?boardId=3">QnA</a>
+												<a href="/usr/article/list?boardId=3&page=1">QnA</a>
 										</li>
 								</ul>
 						</div>

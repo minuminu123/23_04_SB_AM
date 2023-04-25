@@ -33,3 +33,7 @@ html > body {
 .a-middle {
 	 margin: 0 auto;
 }
+
+.pagination {
+	display: inline-block;
+}

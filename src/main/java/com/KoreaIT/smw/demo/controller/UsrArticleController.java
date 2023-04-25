@@ -2,8 +2,6 @@ package com.KoreaIT.smw.demo.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +27,19 @@ public class UsrArticleController {
 	private Rq rq;
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, int boardId) {
+	public String showList(Model model, int boardId, int page) {
 
+		int itemsInAPage = 10;
+		int totalPage = articleService.getTotalPage(boardId);
+		int pageSize = 5;
+		int from = page-pageSize;
+		if(from < 1) {
+			from = 1;
+		}
+		int end = page + pageSize;
+		if (end > totalPage) {
+		end = totalPage;
+		}
 		Board board = boardService.getBoardById(boardId);
 
 		if (board == null) {
@@ -38,11 +47,15 @@ public class UsrArticleController {
 		}
 
 		int articlesCount = articleService.getArticlesCount(boardId);
-		List<Article> articles = articleService.getForPrintArticles(boardId);
+		List<Article> articles = articleService.getForPrintArticles(boardId,page);
 
 		model.addAttribute("board", board);
 		model.addAttribute("articlesCount", articlesCount);
 		model.addAttribute("articles", articles);
+		model.addAttribute("page",page);
+		model.addAttribute("totalPage",totalPage);
+		model.addAttribute("from",from);
+		model.addAttribute("end",end);
 
 		return "usr/article/list";
 	}
@@ -114,7 +127,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String body, String replaceUri) {
+	public String doWrite(String title, String body, int boardId, String replaceUri) {
 
 		if (Ut.empty(title)) {
 			return rq.jsHitoryBack("F-1", "제목을 입력해주세요");
@@ -122,8 +135,10 @@ public class UsrArticleController {
 		if (Ut.empty(body)) {
 			return rq.jsHitoryBack("F-2", "내용을 입력해주세요");
 		}
+		
+		
 
-		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
+		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardId);
 
 		int id = (int) writeArticleRd.getData1();
 

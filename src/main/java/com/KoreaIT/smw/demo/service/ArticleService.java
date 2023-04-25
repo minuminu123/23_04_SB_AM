@@ -21,9 +21,9 @@ public class ArticleService {
 	}
 
 	// 서비스 메서드
-	public ResultData<Integer> writeArticle(int memberId, String title, String body) {
+	public ResultData<Integer> writeArticle(int memberId, String title, String body, int boardId) {
 
-		articleRepository.writeArticle(memberId, title, body);
+		articleRepository.writeArticle(memberId, title, body, boardId);
 
 		int id = articleRepository.getLastInsertId();
 
@@ -51,8 +51,21 @@ public class ArticleService {
 	public Article getArticle(int id) {
 		return articleRepository.getArticle(id);
 	}
+	
+	public int getItemsInAPage() {
+		return 10;
+	}
+
+	public int getTotalPage(int boardId) {
+		int itemsInAPage = getItemsInAPage();
+
+		int totalCnt = getArticlesCount(boardId);
+		int totalPage = (int) Math.ceil((double) totalCnt / itemsInAPage);
+		return totalPage;
+	}
 
 	public Article getForPrintArticle(int actorId, int id) {
+		
 		Article article = articleRepository.getForPrintArticle(id);
 
 		controlForPrintData(actorId, article);
@@ -91,8 +104,13 @@ public class ArticleService {
 		return ResultData.from("S-1", "삭제 가능");
 	}
 
-	public List<Article> getForPrintArticles(int boardId) {
-		return articleRepository.getForPrintArticles(boardId);
+	public List<Article> getForPrintArticles(int boardId, int page) {
+		int itemsInAPage = getItemsInAPage();
+		
+
+
+		int limitFrom = (page - 1) * itemsInAPage;
+		return articleRepository.getForPrintArticles(boardId, limitFrom, itemsInAPage);
 	}
 
 	public int getArticlesCount(int boardId) {

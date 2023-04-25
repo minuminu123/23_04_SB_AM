@@ -11,7 +11,7 @@ import com.KoreaIT.smw.demo.vo.ResultData;
 @Mapper
 public interface ArticleRepository {
 
-	public void writeArticle(int memberId, String title, String body);
+	public void writeArticle(int memberId, String title, String body, int boardId);
 
 	@Select("""
 			SELECT *
@@ -30,10 +30,12 @@ public interface ArticleRepository {
 			<if test="boardId != 0">
 				AND A.boardId = #{boardId}
 			</if>
+			
 			ORDER BY A.id DESC
+			LIMIT #{limitFrom}, #{itemsInAPage}
 			</script>
 				""")
-	public List<Article> getForPrintArticles(int boardId);
+	public List<Article> getForPrintArticles(int boardId, int limitFrom, int itemsInAPage);
 
 	@Select("""
 			SELECT *
@@ -48,6 +50,7 @@ public interface ArticleRepository {
 			INNER JOIN `member` AS M
 			ON A.memberId = M.id
 			WHERE A.id = #{id}
+
 			""")
 	public Article getForPrintArticle(int id);
 
