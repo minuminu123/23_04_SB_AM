@@ -35,11 +35,9 @@
 								<a class="hover:underline" href="../article/detail?id=${article.id}">${article.title}</a>
 							</td>
 							<td>${article.extra__writer}</td>
-
 						</tr>
 					</c:forEach>
 				</tbody>
-
 			</table>
 		</div>
 	</div>
