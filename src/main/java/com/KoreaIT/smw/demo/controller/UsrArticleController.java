@@ -26,10 +26,12 @@ public class UsrArticleController {
 	private BoardService boardService;
 	@Autowired
 	private Rq rq;
-
-	@RequestMapping("/usr/article/list")
-	public String showList(Model model, @RequestParam(defaultValue= "1") int boardId, @RequestParam(defaultValue= "1") int page) {
-
+	
+	@RequestMapping("/usr/article/doSearch")
+	public String doSearch(Model model, @RequestParam(defaultValue= "1") int boardId, @RequestParam(defaultValue= "1") int page, String kw) {
+		if (Ut.empty(kw)) {
+			return rq.jsHitoryBackOnView("검색어를 입력해주세요");
+		}
 		int itemsInAPage = 10;
 		int totalPage = articleService.getTotalPage(boardId);
 		int pageSize = 5;
@@ -48,7 +50,7 @@ public class UsrArticleController {
 		}
 
 		int articlesCount = articleService.getArticlesCount(boardId);
-		List<Article> articles = articleService.getForPrintArticles(boardId,page);
+		List<Article> articles = articleService.getForPrintArticlesByKeyword(kw,boardId, page);
 
 		model.addAttribute("board", board);
 		model.addAttribute("articlesCount", articlesCount);
@@ -57,6 +59,38 @@ public class UsrArticleController {
 		model.addAttribute("totalPage",totalPage);
 		model.addAttribute("from",from);
 		model.addAttribute("end",end);
+
+		return "usr/article/list";
+	}
+
+	@RequestMapping("/usr/article/list")
+	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
+			@RequestParam(defaultValue = "1") int page) {
+
+		Board board = boardService.getBoardById(boardId);
+
+		if (board == null) {
+			return rq.jsHitoryBackOnView("없는 게시판이야");
+		}
+
+		int articlesCount = articleService.getArticlesCount(boardId);
+
+		int itemsInAPage = 10;
+
+		// 한 페이지에 10개씩이야
+		// 글 20개 -> 2
+		// 글 24개 -> 3
+
+		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
+
+		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page);
+
+		model.addAttribute("board", board);
+		model.addAttribute("boardId", boardId);
+		model.addAttribute("page", page);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("articlesCount", articlesCount);
+		model.addAttribute("articles", articles);
 
 		return "usr/article/list";
 	}
@@ -159,5 +193,7 @@ public class UsrArticleController {
 
 		return "usr/article/detail";
 	}
+	
+	
 
 }

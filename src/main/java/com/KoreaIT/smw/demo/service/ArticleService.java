@@ -51,7 +51,7 @@ public class ArticleService {
 	public Article getArticle(int id) {
 		return articleRepository.getArticle(id);
 	}
-	
+
 	public int getItemsInAPage() {
 		return 10;
 	}
@@ -65,7 +65,7 @@ public class ArticleService {
 	}
 
 	public Article getForPrintArticle(int actorId, int id) {
-		
+
 		Article article = articleRepository.getForPrintArticle(id);
 
 		controlForPrintData(actorId, article);
@@ -104,17 +104,25 @@ public class ArticleService {
 		return ResultData.from("S-1", "삭제 가능");
 	}
 
-	public List<Article> getForPrintArticles(int boardId, int page) {
-		int itemsInAPage = getItemsInAPage();
-		
-
-
+	public List<Article> getForPrintArticles(int boardId, int itemsInAPage, int page) {
+		/*
+		 * SELECT * FROM article WHERE boardId = 1 ORDER BY id DESC LIMIT 0, 10
+		 */
 		int limitFrom = (page - 1) * itemsInAPage;
-		return articleRepository.getForPrintArticles(boardId, limitFrom, itemsInAPage);
+		int limitTake = itemsInAPage;
+
+		return articleRepository.getForPrintArticles(boardId, limitFrom, limitTake);
 	}
 
 	public int getArticlesCount(int boardId) {
 		return articleRepository.getArticlesCount(boardId);
+	}
+
+	public List<Article> getForPrintArticlesByKeyword(String kw, int boardId, int page) {
+		int itemsInAPage = getItemsInAPage();
+
+		int limitFrom = (page - 1) * itemsInAPage;
+		return articleRepository.getForPrintArticlesByKeyword(kw, limitFrom, itemsInAPage);
 	}
 
 }

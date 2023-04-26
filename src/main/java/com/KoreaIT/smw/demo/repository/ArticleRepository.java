@@ -20,6 +20,7 @@ public interface ArticleRepository {
 				""")
 	public List<Article> getArticles();
 
+
 	@Select("""
 			<script>
 			SELECT A.*, M.nickname AS extra__writer
@@ -30,14 +31,13 @@ public interface ArticleRepository {
 			<if test="boardId != 0">
 				AND A.boardId = #{boardId}
 			</if>
-			
 			ORDER BY A.id DESC
 			<if test="limitFrom >= 0">
-				LIMIT #{limitFrom}, #{itemsInAPage}
+				LIMIT #{limitFrom}, #{limitTake}
 			</if>
 			</script>
 				""")
-	public List<Article> getForPrintArticles(int boardId, int limitFrom, int itemsInAPage);
+	public List<Article> getForPrintArticles(int boardId, int limitFrom, int limitTake);
 
 	@Select("""
 			SELECT *
@@ -73,5 +73,24 @@ public interface ArticleRepository {
 			</script>
 				""")
 	public int getArticlesCount(int boardId);
+
+	@Select("""
+			<script>
+			SELECT A.*, M.nickname AS extra__writer
+			FROM article AS A
+			INNER JOIN `member` AS M
+			ON A.memberId = M.id
+			WHERE 1
+			<if test="kw != ''">
+				AND A.title like CONCAT('%',#{kw},'%')
+			</if>
+			
+			ORDER BY A.id DESC
+			<if test="limitFrom >= 0">
+				LIMIT #{limitFrom}, #{itemsInAPage}
+			</if>
+			</script>
+			""")
+	public List<Article> getForPrintArticlesByKeyword(String kw, int limitFrom, int itemsInAPage);
 
 }
