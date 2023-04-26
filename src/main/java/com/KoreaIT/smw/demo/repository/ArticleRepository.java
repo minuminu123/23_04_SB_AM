@@ -4,14 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.KoreaIT.smw.demo.vo.Article;
-import com.KoreaIT.smw.demo.vo.ResultData;
 
 @Mapper
 public interface ArticleRepository {
 
-	public void writeArticle(int memberId, String title, String body, int boardId);
+	public void writeArticle(int memberId, int boardId, String title, String body);
 
 	@Select("""
 			SELECT *
@@ -19,7 +19,6 @@ public interface ArticleRepository {
 			ORDER BY id DESC
 				""")
 	public List<Article> getArticles();
-
 
 	@Select("""
 			<script>
@@ -31,13 +30,28 @@ public interface ArticleRepository {
 			<if test="boardId != 0">
 				AND A.boardId = #{boardId}
 			</if>
+			<if test="searchKeyword != ''">
+				<choose>
+					<when test="searchKeywordTypeCode == 'title'" >
+						AND A.title LIKE CONCAT('%',#{searchKeyword},'%')
+					</when>
+					<when test="searchKeywordTypeCode == 'body'" >
+						AND A.body LIKE CONCAT('%',#{searchKeyword},'%')
+					</when>
+					<otherwise>
+						AND A.title LIKE CONCAT('%',#{searchKeyword},'%')
+						OR A.body LIKE CONCAT('%',#{searchKeyword},'%')
+					</otherwise>
+				</choose>
+			</if>
 			ORDER BY A.id DESC
 			<if test="limitFrom >= 0">
 				LIMIT #{limitFrom}, #{limitTake}
 			</if>
 			</script>
 				""")
-	public List<Article> getForPrintArticles(int boardId, int limitFrom, int limitTake);
+	public List<Article> getForPrintArticles(int boardId, String searchKeywordTypeCode, String searchKeyword,
+			int limitFrom, int limitTake);
 
 	@Select("""
 			SELECT *
@@ -52,7 +66,6 @@ public interface ArticleRepository {
 			INNER JOIN `member` AS M
 			ON A.memberId = M.id
 			WHERE A.id = #{id}
-
 			""")
 	public Article getForPrintArticle(int id);
 
@@ -70,27 +83,33 @@ public interface ArticleRepository {
 			<if test="boardId != 0">
 				AND A.boardId = #{boardId}
 			</if>
+			<if test="searchKeyword != ''">
+				<choose>
+					<when test="searchKeywordTypeCode == 'title'" >
+						AND A.title LIKE CONCAT('%',#{searchKeyword},'%')
+					</when>
+					<when test="searchKeywordTypeCode == 'body'" >
+						AND A.body LIKE CONCAT('%',#{searchKeyword},'%')
+					</when>
+					<otherwise>
+						AND A.title LIKE CONCAT('%',#{searchKeyword},'%')
+						OR A.body LIKE CONCAT('%',#{searchKeyword},'%')
+					</otherwise>
+				</choose>
+			</if>
 			</script>
 				""")
-	public int getArticlesCount(int boardId);
+	public int getArticlesCount(int boardId, String searchKeywordTypeCode, String searchKeyword);
 
-	@Select("""
+	
+	@Update("""
 			<script>
-			SELECT A.*, M.nickname AS extra__writer
-			FROM article AS A
-			INNER JOIN `member` AS M
-			ON A.memberId = M.id
-			WHERE 1
-			<if test="kw != ''">
-				AND A.title like CONCAT('%',#{kw},'%')
-			</if>
-			
-			ORDER BY A.id DESC
-			<if test="limitFrom >= 0">
-				LIMIT #{limitFrom}, #{itemsInAPage}
-			</if>
+				UPDATE article
+				SET hitCount = hitCount + 1
+				WHERE id = #{id}
 			</script>
 			""")
-	public List<Article> getForPrintArticlesByKeyword(String kw, int limitFrom, int itemsInAPage);
+
+	public void increaseHitCount(int id);
 
 }

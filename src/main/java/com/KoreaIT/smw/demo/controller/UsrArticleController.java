@@ -26,46 +26,11 @@ public class UsrArticleController {
 	private BoardService boardService;
 	@Autowired
 	private Rq rq;
-	
-	@RequestMapping("/usr/article/doSearch")
-	public String doSearch(Model model, @RequestParam(defaultValue= "1") int boardId, @RequestParam(defaultValue= "1") int page, String kw) {
-		if (Ut.empty(kw)) {
-			return rq.jsHitoryBackOnView("검색어를 입력해주세요");
-		}
-		int itemsInAPage = 10;
-		int totalPage = articleService.getTotalPage(boardId);
-		int pageSize = 5;
-		int from = page-pageSize;
-		if(from < 1) {
-			from = 1;
-		}
-		int end = page + pageSize;
-		if (end > totalPage) {
-		end = totalPage;
-		}
-		Board board = boardService.getBoardById(boardId);
-
-		if (board == null) {
-			return rq.jsHitoryBackOnView("없는 게시판이야");
-		}
-
-		int articlesCount = articleService.getArticlesCount(boardId);
-		List<Article> articles = articleService.getForPrintArticlesByKeyword(kw,boardId, page);
-
-		model.addAttribute("board", board);
-		model.addAttribute("articlesCount", articlesCount);
-		model.addAttribute("articles", articles);
-		model.addAttribute("page",page);
-		model.addAttribute("totalPage",totalPage);
-		model.addAttribute("from",from);
-		model.addAttribute("end",end);
-
-		return "usr/article/list";
-	}
 
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
-			@RequestParam(defaultValue = "1") int page) {
+			@RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
+			@RequestParam(defaultValue = "") String searchKeyword, @RequestParam(defaultValue = "1") int page) {
 
 		Board board = boardService.getBoardById(boardId);
 
@@ -73,18 +38,17 @@ public class UsrArticleController {
 			return rq.jsHitoryBackOnView("없는 게시판이야");
 		}
 
-		int articlesCount = articleService.getArticlesCount(boardId);
+		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 
 		int itemsInAPage = 10;
 
-		// 한 페이지에 10개씩이야
-		// 글 20개 -> 2
-		// 글 24개 -> 3
-
 		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
 
-		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page);
+		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
+				searchKeyword);
 
+		model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
+		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
 		model.addAttribute("page", page);
@@ -162,7 +126,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public String doWrite(String title, String body, int boardId, String replaceUri) {
+	public String doWrite(int boardId, String title, String body, String replaceUri) {
 
 		if (Ut.empty(title)) {
 			return rq.jsHitoryBack("F-1", "제목을 입력해주세요");
@@ -170,10 +134,8 @@ public class UsrArticleController {
 		if (Ut.empty(body)) {
 			return rq.jsHitoryBack("F-2", "내용을 입력해주세요");
 		}
-		
-		
 
-		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body, boardId);
+		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), boardId, title, body);
 
 		int id = (int) writeArticleRd.getData1();
 
@@ -189,11 +151,11 @@ public class UsrArticleController {
 
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
+		articleService.increaseHitCount(id);
+
 		model.addAttribute("article", article);
 
 		return "usr/article/detail";
 	}
-	
-	
 
 }

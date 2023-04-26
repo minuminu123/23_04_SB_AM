@@ -121,7 +121,7 @@ updateDate = NOW(),
 `name` = '질의응답';
 
 ALTER TABLE article ADD COLUMN boardId INT(10) UNSIGNED NOT NULL AFTER `memberId`;
-
+ALTER TABLE article ADD COLUMN hitCount INT(10) UNSIGNED NOT NULL;
 UPDATE article
 SET boardId = 1
 WHERE id IN (1,2);
@@ -155,5 +155,7 @@ AND A.boardId = 1
 
 
 DESC `member`;
+
+SELECT * FROM article WHERE title LIKE '%제목1%'
 
 SELECT LAST_INSERT_ID();

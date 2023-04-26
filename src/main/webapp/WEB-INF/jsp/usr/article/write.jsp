@@ -47,7 +47,7 @@
 												<tr>
 														<th></th>
 														<td>
-																<button type="submit" value="글쓰기 완료" />
+																<button type="submit" value="글쓰기 완료" >
 																글쓰기 완료
 																</button>
 														</td>

@@ -20,10 +20,9 @@ public class ArticleService {
 		this.articleRepository = articleRepository;
 	}
 
-	// 서비스 메서드
-	public ResultData<Integer> writeArticle(int memberId, String title, String body, int boardId) {
+	public ResultData<Integer> writeArticle(int memberId, int boardId, String title, String body) {
 
-		articleRepository.writeArticle(memberId, title, body, boardId);
+		articleRepository.writeArticle(memberId, boardId, title, body);
 
 		int id = articleRepository.getLastInsertId();
 
@@ -52,20 +51,7 @@ public class ArticleService {
 		return articleRepository.getArticle(id);
 	}
 
-	public int getItemsInAPage() {
-		return 10;
-	}
-
-	public int getTotalPage(int boardId) {
-		int itemsInAPage = getItemsInAPage();
-
-		int totalCnt = getArticlesCount(boardId);
-		int totalPage = (int) Math.ceil((double) totalCnt / itemsInAPage);
-		return totalPage;
-	}
-
 	public Article getForPrintArticle(int actorId, int id) {
-
 		Article article = articleRepository.getForPrintArticle(id);
 
 		controlForPrintData(actorId, article);
@@ -104,25 +90,22 @@ public class ArticleService {
 		return ResultData.from("S-1", "삭제 가능");
 	}
 
-	public List<Article> getForPrintArticles(int boardId, int itemsInAPage, int page) {
-		/*
-		 * SELECT * FROM article WHERE boardId = 1 ORDER BY id DESC LIMIT 0, 10
-		 */
+	public List<Article> getForPrintArticles(int boardId, int itemsInAPage, int page, String searchKeywordTypeCode,
+			String searchKeyword) {
+
 		int limitFrom = (page - 1) * itemsInAPage;
 		int limitTake = itemsInAPage;
 
-		return articleRepository.getForPrintArticles(boardId, limitFrom, limitTake);
+		return articleRepository.getForPrintArticles(boardId, searchKeywordTypeCode, searchKeyword, limitFrom,
+				limitTake);
 	}
 
-	public int getArticlesCount(int boardId) {
-		return articleRepository.getArticlesCount(boardId);
+	public int getArticlesCount(int boardId, String searchKeywordTypeCode, String searchKeyword) {
+		return articleRepository.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
 	}
 
-	public List<Article> getForPrintArticlesByKeyword(String kw, int boardId, int page) {
-		int itemsInAPage = getItemsInAPage();
-
-		int limitFrom = (page - 1) * itemsInAPage;
-		return articleRepository.getForPrintArticlesByKeyword(kw, limitFrom, itemsInAPage);
+	public void increaseHitCount(int id) {
+		articleRepository.increaseHitCount(id);
 	}
 
 }
