@@ -145,7 +145,7 @@ public class UsrArticleController {
 
 		return rq.jsReplace(Ut.f("%d번 글이 생성되었습니다", id), replaceUri);
 	}
-
+	
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id) {
 
