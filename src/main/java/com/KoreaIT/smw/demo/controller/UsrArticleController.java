@@ -27,17 +27,6 @@ public class UsrArticleController {
 	@Autowired
 	private Rq rq;
 
-	
-	@RequestMapping("/usr/article/detail")
-	public String showDetail(Model model, int id) {
-
-		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
-
-		model.addAttribute("article", article);
-
-		return "usr/article/detail";
-	}
-	
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
 			@RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
@@ -157,6 +146,18 @@ public class UsrArticleController {
 		return rq.jsReplace(Ut.f("%d번 글이 생성되었습니다", id), replaceUri);
 	}
 
+	@RequestMapping("/usr/article/detail")
+	public String showDetail(Model model, int id) {
+
+		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		boolean actorCanMakeReaction = articleService.actorCanMakeReaction(rq.getLoginedMemberId(), id);
+
+		model.addAttribute("article", article);
+		model.addAttribute("actorCanMakeReaction", actorCanMakeReaction);
+
+		return "usr/article/detail";
+	}
 
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
