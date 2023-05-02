@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.KoreaIT.smw.demo.service.ArticleService;
 import com.KoreaIT.smw.demo.service.BoardService;
 import com.KoreaIT.smw.demo.service.ReactionPointService;
+import com.KoreaIT.smw.demo.service.ReplyService;
 import com.KoreaIT.smw.demo.util.Ut;
 import com.KoreaIT.smw.demo.vo.Article;
 import com.KoreaIT.smw.demo.vo.Board;
+import com.KoreaIT.smw.demo.vo.Reply;
 import com.KoreaIT.smw.demo.vo.ResultData;
 import com.KoreaIT.smw.demo.vo.Rq;
 
@@ -26,10 +28,30 @@ public class UsrArticleController {
 	@Autowired
 	private BoardService boardService;
 	@Autowired
+	private ReplyService replyService;
+	@Autowired
 	private Rq rq;
 	@Autowired
 	private ReactionPointService reactionPointService;
 
+	
+	@RequestMapping("/usr/article/reply")
+	@ResponseBody
+	public String doReply(String relTypeCode, String body, int id, String replaceUri) {
+
+		if (Ut.empty(body)) {
+			return rq.jsHitoryBack("F-1", "댓글을 입력해주세요");
+		}
+
+		ResultData<Integer> writeArticleRd = replyService.writeReply(relTypeCode, rq.getLoginedMemberId(), id, body);
+
+		if (Ut.empty(replaceUri)) {
+			replaceUri = Ut.f("../article/detail?id=%d", id);
+		}
+
+		return rq.jsReplace(Ut.f("댓글이 생성되었습니다"), replaceUri);
+	}
+	
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
 			@RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
@@ -157,6 +179,9 @@ public class UsrArticleController {
 		ResultData actorCanMakeReactionRd = reactionPointService.actorCanMakeReaction(rq.getLoginedMemberId(),
 				"article", id);
 
+		List<Reply> replys = replyService.getReplys(id);
+		
+		model.addAttribute("replys", replys);
 		model.addAttribute("article", article);
 		model.addAttribute("actorCanMakeReactionRd", actorCanMakeReactionRd);
 		model.addAttribute("actorCanMakeReaction", actorCanMakeReactionRd.isSuccess());

@@ -2,6 +2,7 @@ package com.KoreaIT.smw.demo.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -11,6 +12,15 @@ import com.KoreaIT.smw.demo.vo.Article;
 @Mapper
 public interface ArticleRepository {
 
+	@Insert("""
+			INSERT INTO article
+			SET regDate = NOW(),
+			updateDate = NOW(),
+			memberId = #{memberId},
+			boardId = #{boardId},
+			title =#{title},
+			`body`= #{body}
+				""")
 	public void writeArticle(int memberId, int boardId, String title, String body);
 
 	@Select("""
@@ -140,5 +150,23 @@ public interface ArticleRepository {
 			</script>
 			""")
 	public int increaseBadReationPoint(int relId);
+
+	@Update("""
+			<script>
+				UPDATE article
+				SET goodReactionPoint = goodReactionPoint - 1
+				WHERE id = #{relId}
+			</script>
+			""")
+	public int decreaseGoodReationPoint(int relId);
+
+	@Update("""
+			<script>
+				UPDATE article
+				SET badReactionPoint = badReactionPoint - 1
+				WHERE id = #{relId}
+			</script>
+			""")
+	public int decreaseBadReationPoint(int relId);
 
 }
