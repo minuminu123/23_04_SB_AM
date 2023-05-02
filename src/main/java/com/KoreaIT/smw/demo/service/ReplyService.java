@@ -16,16 +16,21 @@ public class ReplyService {
 
 	@Autowired
 	private ReplyRepository replyRepository;
-	
+
 	public ReplyService(ReplyRepository replyRepository) {
 		this.replyRepository = replyRepository;
 	}
 
-	public ResultData<Integer> writeReply(String relTypeCode, int actorId, int id, String body) {
-		
-		replyRepository.writeReply(relTypeCode, actorId, id, body);
-		
-		return ResultData.from("S-1", Ut.f("댓글 생성 완료"));
+	public ResultData<Integer> writeReply(int actorId, String relTypeCode, int relId, String body) {
+		replyRepository.writeReply(actorId, relTypeCode, relId, body);
+
+		int id = replyRepository.getLastInsertId();
+
+		return ResultData.from("S-1", Ut.f("%d번 댓글이 생성되었습니다", id), "id", id);
+	}
+
+	public List<Reply> getForPrintReplies(int actorId, String relTypeCode, int relId) {
+		return replyRepository.getForPrintReplies(actorId, relTypeCode, relId);
 	}
 
 	public List<Reply> getReplys(int id) {

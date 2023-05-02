@@ -18,13 +18,13 @@ public class UsrReactionPointController {
 
 	@RequestMapping("/usr/reactionPoint/doGoodReaction")
 	@ResponseBody
-	public String doGoodReaction(String relTypeCode, int relId, String replaceUri) {
+	public ResultData doGoodReaction(String relTypeCode, int relId, String replaceUri) {
 
 		ResultData actorCanMakeReactionRd = reactionPointService.actorCanMakeReaction(rq.getLoginedMemberId(),
 				relTypeCode, relId);
 
 		if (actorCanMakeReactionRd.isFail()) {
-			return rq.jsHitoryBack("F-1", "이미 했음");
+			return actorCanMakeReactionRd;
 		}
 
 		ResultData rd = reactionPointService.addGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
@@ -33,7 +33,7 @@ public class UsrReactionPointController {
 			rq.jsHitoryBack(rd.getMsg(), "좋아요 실패");
 		}
 
-		return rq.jsReplace(rd.getMsg(), replaceUri);
+		return rd;
 	}
 
 	@RequestMapping("/usr/reactionPoint/doBadReaction")
