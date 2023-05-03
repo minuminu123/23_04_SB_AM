@@ -43,9 +43,9 @@ public class ArticleService {
 		return ResultData.from("S-1", Ut.f("%d번 글을 수정 했습니다", id), "article", article);
 	}
 
-	public List<Article> articles() {
-		return articleRepository.getArticles();
-	}
+//	public List<Article> articles() {
+//		return articleRepository.getArticles();
+//	}
 
 	public Article getArticle(int id) {
 		return articleRepository.getArticle(id);
@@ -154,6 +154,10 @@ public class ArticleService {
 		}
 		return ResultData.from("S-1", "싫어요 감소", "affectedRow", affectedRow);
 
+	}
+
+	public List<Article> getArticles(int actorId) {
+		return articleRepository.getArticles(actorId);
 	}
 
 }

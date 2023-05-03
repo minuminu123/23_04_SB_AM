@@ -56,6 +56,13 @@
 												</a>
 										</li>
 								</c:if>
+								<c:if test="${rq.isLogined() }">
+										<li class="hover:underline">
+												<a class="h-full px-3 flex items-center" href="/usr/member/myPage?id=${rq.loginedMemberId }">
+														<span>My Page</span>
+												</a>
+										</li>
+								</c:if>
 						</ul>
 						<div class="dropdown dropdown-left my-2">
 								<label tabindex="0" class="btn m-1">Click</label>

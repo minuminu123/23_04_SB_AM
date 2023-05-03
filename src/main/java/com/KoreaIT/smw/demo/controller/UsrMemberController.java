@@ -1,16 +1,19 @@
 package com.KoreaIT.smw.demo.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.KoreaIT.smw.demo.service.ArticleService;
 import com.KoreaIT.smw.demo.service.MemberService;
 import com.KoreaIT.smw.demo.util.Ut;
+import com.KoreaIT.smw.demo.vo.Article;
 import com.KoreaIT.smw.demo.vo.Member;
 import com.KoreaIT.smw.demo.vo.ResultData;
 import com.KoreaIT.smw.demo.vo.Rq;
@@ -20,6 +23,8 @@ public class UsrMemberController {
 
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private ArticleService articleService;
 	@Autowired
 	private Rq rq;
 
@@ -106,4 +111,18 @@ public class UsrMemberController {
 		return Ut.jsReplace("S-1", "로그아웃 되었습니다", "/");
 	}
 
+	
+	@RequestMapping("/usr/member/myPage")
+	public String showMyPage(Model model, int id) {
+
+		if (!rq.isLogined()) {
+			return Ut.jsHitoryBack("F-1", "로그인후 이용해주세요");
+		}
+
+		List<Article> articles = articleService.getArticles(id);
+		
+		model.addAttribute("articles", articles);
+
+		return "usr/member/myPage"; 
+	}
 }

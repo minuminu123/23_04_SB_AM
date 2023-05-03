@@ -24,11 +24,14 @@ public interface ArticleRepository {
 	public void writeArticle(int memberId, int boardId, String title, String body);
 
 	@Select("""
-			SELECT *
-			FROM article
-			ORDER BY id DESC
+			SELECT A.*, M.nickname AS extra__writer
+			FROM article AS A
+			INNER JOIN `member` AS M
+			ON A.memberId = M.id
+			WHERE A.memberId = #{actorId}
+			ORDER BY A.id DESC
 				""")
-	public List<Article> getArticles();
+	public List<Article> getArticles(int actorId);
 
 	@Select("""
 			<script>
