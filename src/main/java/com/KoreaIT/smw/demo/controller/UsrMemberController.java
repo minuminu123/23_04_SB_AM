@@ -111,7 +111,12 @@ public class UsrMemberController {
 		return Ut.jsReplace("S-1", "로그아웃 되었습니다", "/");
 	}
 
-	
+	@RequestMapping("/usr/member/checkPw")
+	public String showCheckPw() {
+
+		return "usr/member/checkPw";
+	}
+
 	@RequestMapping("/usr/member/myPage")
 	public String showMyPage(Model model, int id) {
 
@@ -120,9 +125,26 @@ public class UsrMemberController {
 		}
 
 		List<Article> articles = articleService.getArticles(id);
-		
+
+//		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
+//
+//		int itemsInAPage = 10;
+//
+//		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
+//
+//		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
+//				searchKeyword);
+//
+//		model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
+//		model.addAttribute("searchKeyword", searchKeyword);
+//		model.addAttribute("board", board);
+//		model.addAttribute("boardId", boardId);
+//		model.addAttribute("page", page);
+//		model.addAttribute("pagesCount", pagesCount);
+//		model.addAttribute("articlesCount", articlesCount);
+
 		model.addAttribute("articles", articles);
 
-		return "usr/member/myPage"; 
+		return "usr/member/myPage";
 	}
 }
