@@ -44,4 +44,17 @@ public interface ReplyRepository {
 			""")
 	List<Reply> getForPrintReplies(int actorId, String relTypeCode, int relId);
 
+	@Select("""
+				SELECT R.*
+				FROM reply AS R
+				WHERE R.id = #{id}
+			""")
+	Reply getReply(int id);
+
+	@Delete("""
+				DELETE FROM reply
+				WHERE id = #{id}
+			""")
+	void deleteReply(int id);
+
 }
