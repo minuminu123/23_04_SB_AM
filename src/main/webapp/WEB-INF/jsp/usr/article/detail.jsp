@@ -228,7 +228,7 @@
 	</div>
 </section>
 
-<c:forEach var="reply" items="${replys }">
+<c:forEach var="reply" items="${replies }">
 		<tr class="hover">
 				<td>
 						<div class="badge">${reply.id}</div>

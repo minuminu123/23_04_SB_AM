@@ -171,6 +171,7 @@ public class UsrArticleController {
 
 		int repliesCount = replies.size();
 
+		model.addAttribute("replies", replies);
 		model.addAttribute("repliesCount", repliesCount);
 		model.addAttribute("article", article);
 		model.addAttribute("actorCanMakeReactionRd", actorCanMakeReactionRd);
