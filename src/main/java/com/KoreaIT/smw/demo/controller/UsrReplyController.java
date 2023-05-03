@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.KoreaIT.smw.demo.service.ReplyService;
 import com.KoreaIT.smw.demo.util.Ut;
+import com.KoreaIT.smw.demo.vo.Article;
+import com.KoreaIT.smw.demo.vo.Reply;
 import com.KoreaIT.smw.demo.vo.ResultData;
 import com.KoreaIT.smw.demo.vo.Rq;
 
@@ -41,6 +43,45 @@ public class UsrReplyController {
 		}
 
 		return rq.jsReplace(writeReplyRd.getMsg(), replaceUri);
+	}
+	
+	@RequestMapping("/usr/reply/doModify")
+	@ResponseBody
+	public String doModify(String relTypeCode, int relId, int actorId, int id) {
+
+		Reply reply = replyService.getReply(relTypeCode, relId, actorId, id);
+
+		if (article == null) {
+			return rq.jsHitoryBack("F-1", Ut.f("%d번 글은 존재하지 않습니다@", id));
+		}
+
+		ResultData actorCanModifyRd = articleService.actorCanModify(rq.getLoginedMemberId(), article);
+
+		if (actorCanModifyRd.isFail()) {
+			return rq.jsHitoryBack(actorCanModifyRd.getResultCode(), actorCanModifyRd.getMsg());
+		}
+
+		articleService.modifyArticle(id, title, body);
+
+		return rq.jsReplace(Ut.f("%d번 글을 수정 했습니다", id), Ut.f("../article/detail?id=%d", id));
+	}
+	
+	@RequestMapping("/usr/reply/doDelete")
+	@ResponseBody
+	public String doDelete(String relTypeCode, int relId, int actorId, int id) {
+
+		Reply reply = replyService.getReply(relTypeCode, relId, actorId, id);
+		if (reply == null) {
+			return Ut.jsHitoryBack("F-1", Ut.f("%d번 글은 존재하지 않습니다", id));
+		}
+
+		if (reply.getMemberId() != rq.getLoginedMemberId()) {
+			return Ut.jsHitoryBack("F-2", Ut.f("%d번 글에 대한 권한이 없습니다", id));
+		}
+
+		replyService.deleteReply(relTypeCode, relId, actorId, id);
+
+		return Ut.jsReplace(Ut.f("%d번 글을 삭제 했습니다", id), "../article/list?boardId=1");
 	}
 
 }
