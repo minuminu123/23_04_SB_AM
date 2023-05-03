@@ -24,8 +24,6 @@ public class UsrMemberController {
 	@Autowired
 	private MemberService memberService;
 	@Autowired
-	private ArticleService articleService;
-	@Autowired
 	private Rq rq;
 
 	@RequestMapping("/usr/member/doJoin")
@@ -111,40 +109,66 @@ public class UsrMemberController {
 		return Ut.jsReplace("S-1", "로그아웃 되었습니다", "/");
 	}
 
+	@RequestMapping("/usr/member/myPage")
+	public String showMyPage() {
+
+		return "usr/member/myPage";
+	}
+
 	@RequestMapping("/usr/member/checkPw")
 	public String showCheckPw() {
 
 		return "usr/member/checkPw";
 	}
 
-	@RequestMapping("/usr/member/myPage")
-	public String showMyPage(Model model, int id) {
+	@RequestMapping("/usr/member/doCheckPw")
+	@ResponseBody
+	public String doCheckPw(String loginPw) {
 
-		if (!rq.isLogined()) {
-			return Ut.jsHitoryBack("F-1", "로그인후 이용해주세요");
+		if (Ut.empty(loginPw)) {
+			return rq.jsHitoryBackOnView("비밀번호 입력해");
 		}
 
-		List<Article> articles = articleService.getArticles(id);
+		if (rq.getLoginedMember().getLoginPw().equals(loginPw) == false) {
+			return rq.jsHitoryBackOnView("비밀번호 틀림");
+		}
 
-//		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
-//
-//		int itemsInAPage = 10;
-//
-//		int pagesCount = (int) Math.ceil(articlesCount / (double) itemsInAPage);
-//
-//		List<Article> articles = articleService.getForPrintArticles(boardId, itemsInAPage, page, searchKeywordTypeCode,
-//				searchKeyword);
-//
-//		model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
-//		model.addAttribute("searchKeyword", searchKeyword);
-//		model.addAttribute("board", board);
-//		model.addAttribute("boardId", boardId);
-//		model.addAttribute("page", page);
-//		model.addAttribute("pagesCount", pagesCount);
-//		model.addAttribute("articlesCount", articlesCount);
-
-		model.addAttribute("articles", articles);
-
-		return "usr/member/myPage";
+		return "usr/member/modify";
 	}
+
+//	@RequestMapping("/usr/member/doModify")
+//	@ResponseBody
+//	public ResultData<Member> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+//			String email) {
+//
+//		if (Ut.empty(loginId)) {
+//			return ResultData.from("F-1", "아이디를 입력해주세요");
+//		}
+//		if (Ut.empty(loginPw)) {
+//			return ResultData.from("F-2", "비밀번호를 입력해주세요");
+//		}
+//		if (Ut.empty(name)) {
+//			return ResultData.from("F-3", "이름을 입력해주세요");
+//		}
+//		if (Ut.empty(nickname)) {
+//			return ResultData.from("F-4", "닉네임을 입력해주세요");
+//		}
+//		if (Ut.empty(cellphoneNum)) {
+//			return ResultData.from("F-5", "전화번호를 입력해주세요");
+//		}
+//		if (Ut.empty(email)) {
+//			return ResultData.from("F-6", "이메일을 입력해주세요");
+//		}
+//
+//		ResultData<Integer> joinRd = memberService.join(loginId, loginPw, name, nickname, cellphoneNum, email);
+//
+//		if (joinRd.isFail()) {
+//			return (ResultData) joinRd;
+//		}
+//
+//		Member member = memberService.getMemberById(joinRd.getData1());
+//
+//		return ResultData.newData(joinRd, "member", member);
+//	}
+
 }
