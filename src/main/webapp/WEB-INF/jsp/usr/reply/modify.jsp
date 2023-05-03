@@ -1,14 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<c:set var="pageTitle" value="ARTICLE MODIFY" />
+<c:set var="pageTitle" value="Reply MODIFY" />
 <%@ include file="../common/head.jspf"%>
 <hr />
+
+<!-- Reply modify 관련 -->
+<script type="text/javascript">
+	let ReplyModify__submitFormDone = false;
+	function ReplyModify__submit(form) {
+		if (ReplyModify__submitFormDone) {
+			return;
+		}
+		form.body.value = form.body.value.trim();
+		if (form.body.value.length == 0) {
+			alert('내용을 입력해주세요');
+			form.body.focus();
+			return;
+		}
+		ReplyModify__submitFormDone = true;
+		form.submit();
+	}
+</script>
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
 		<div class="table-box-type-1">
-			<form action="../reply/doModify" method="POST">
-				<input type="hidden" name="id" value="${reply.id }" />
+			<form action="../reply/doModify" method="POST" onsubmit="ReplyModify__submit(this); return false;">
+				<input type="hidden" name="id" value="${article.id }" />
 				<table>
 					<colgroup>
 						<col width="200" />
@@ -16,34 +34,35 @@
 
 					<tbody>
 						<tr>
-							<th>번호</th>
+							<th>게시물 번호</th>
 							<td>
 								<div class="badge">${article.id}</div>
 							</td>
 						</tr>
 						<tr>
-							<th>작성날짜</th>
-							<td>${article.regDate }</td>
-						</tr>
-						<tr>
-							<th>수정날짜</th>
-							<td>${article.updateDate }</td>
-						</tr>
-						<tr>
-							<th>작성자</th>
-							<td>${article.extra__writer }</td>
-						</tr>
-						<tr>
-							<th>제목</th>
+							<th>게시물 제목</th>
 							<td>
-								<input class="input input-bordered w-full max-w-xs" type="text" name="title" placeholder="제목을 입력해주세요"
-									value="${article.title }" />
+								<div class="badge">${article.title}</div>
 							</td>
 						</tr>
 						<tr>
-							<th>내용</th>
+							<th>게시물 내용</th>
 							<td>
-								<textarea class="input input-bordered w-full max-w-xs" type="text" name="body" placeholder="내용을 입력해주세요" />${article.body }</textarea>
+								<div class="badge">${article.body}</div>
+							</td>
+						</tr>
+						<tr>
+							<th>댓글 작성날짜</th>
+							<td>${reply.regDate }</td>
+						</tr>
+						<tr>
+							<th>댓글 작성자</th>
+							<td>${reply.extra__writer }</td>
+						</tr>
+						<tr>
+							<th>댓글 내용</th>
+							<td>
+								<textarea class="input input-bordered w-full max-w-xs" type="text" name="body" placeholder="내용을 입력해주세요" />${reply.body }</textarea>
 							</td>
 						</tr>
 						<tr>
@@ -62,10 +81,7 @@
 		<div class="btns">
 			<button class="btn-text-link btn btn-active btn-ghost" type="button" onclick="history.back();">뒤로가기</button>
 
-			<c:if test="${article.actorCanDelete }">
-				<a class="btn-text-link btn btn-active btn-ghost" onclick="if(confirm('정말 삭제하시겠습니까?')==false) return false;"
-					href="../article/doDelete?id=${article.id }">삭제</a>
-			</c:if>
+
 		</div>
 	</div>
 </section>
