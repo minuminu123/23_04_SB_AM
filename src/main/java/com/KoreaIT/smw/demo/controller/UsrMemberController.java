@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.KoreaIT.smw.demo.service.ArticleService;
@@ -68,7 +69,7 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(String loginId, String loginPw) {
+	public String doLogin(String loginId, String loginPw, @RequestParam(defaultValue = "/") String afterLoginUri) {
 
 		if (rq.isLogined()) {
 			return Ut.jsHitoryBack("F-5", "이미 로그인 상태입니다");
@@ -93,7 +94,7 @@ public class UsrMemberController {
 
 		rq.login(member);
 
-		return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getName()), "/");
+		return Ut.jsReplace("S-1", Ut.f("%s님 환영합니다", member.getName()), afterLoginUri);
 	}
 
 	@RequestMapping("/usr/member/doLogout")
