@@ -131,5 +131,13 @@ public class Rq {
 		print(Ut.jsReplace(msg, replaceUri));
 
 	}
+	
+	public String getLoginUri() {
+		return "../member/login?afterLoginUri=" + getAfterLoginUri();
+	}
+
+	private String getAfterLoginUri() {
+		return getEncodedCurrentUri();
+	}
 
 }
