@@ -12,7 +12,7 @@ public interface MemberRepository {
 
 	@Insert("""
 			INSERT INTO `member`
-			set regDate = NOW(),
+			SET regDate = NOW(),
 			updateDate = NOW(),
 			loginId = #{loginId},
 			loginPw = #{loginPw},
@@ -41,36 +41,39 @@ public interface MemberRepository {
 			WHERE loginId = #{loginId}
 			""")
 	Member getMemberByLoginId(String loginId);
-	
-	
-	@Select("""
-			SELECT *
-			FROM `member`
-			WHERE name = #{name} AND
-			email = #{email}
-			""")
-	Member getMemberByNameAndEmail(String name, String email);
 
 	@Select("""
 			SELECT *
 			FROM `member`
-			WHERE loginId = #{loginId} AND
-			loginPw = #{loginPw}
+			WHERE name = #{name}
+			AND email = #{email}
 			""")
-	Member getMember(String loginId, String loginPw);
+	Member getMemberByNameAndEmail(String name, String email);
 
 	@Update("""
 			<script>
 			UPDATE `member`
 			<set>
-				<if test="loginId != null and loginId != ''">loginId = #{loginId},</if>
-				<if test="loginPw != null and loginPw != ''">`loginPw` = #{loginPw},</if>
+				<if test="loginPw != null">
+					loginPw = #{loginPw},
+				</if>
+				<if test="name != null">
+					name = #{name},
+				</if>
+				<if test="nickname != null">
+					nickname = #{nickname},
+				</if>
+				<if test="cellphoneNum != null">
+					cellphoneNum = #{cellphoneNum},
+				</if>
+				<if test="email != null">
+					email = #{email},
+				</if>
 				updateDate= NOW()
 			</set>
-			WHERE id = #{memberId}
+			WHERE id = #{id}
 			</script>
 			""")
-	void modifyMember(int memberId, String loginId, String loginPw);
-
+	void modify(int id, String loginPw, String name, String nickname, String cellphoneNum, String email);
 
 }

@@ -7,46 +7,58 @@
 <!-- Member modify 관련 -->
 <script type="text/javascript">
 	let MemberModify__submitFormDone = false;
+
 	function MemberModify__submit(form) {
 		if (MemberModify__submitFormDone) {
 			return;
 		}
 		form.loginPw.value = form.loginPw.value.trim();
+
 		if (form.loginPw.value.length > 0) {
 			form.loginPwConfirm.value = form.loginPwConfirm.value.trim();
+
 			if (form.loginPwConfirm.value.length == 0) {
 				alert('비번 확인 써라');
 				form.loginPwConfirm.focus();
 				return;
+
 			}
+
 			if (form.loginPw.value != form.loginPwConfirm.value) {
 				alert('비번 불일치');
 				form.loginPw.focus();
 				return;
 			}
 		}
+
 		form.name.value = form.name.value.trim();
 		form.nickname.value = form.nickname.value.trim();
 		form.cellphoneNum.value = form.cellphoneNum.value.trim();
 		form.email.value = form.email.value.trim();
+
 		if (form.name.value.length == 0) {
 			alert('이름 써라');
 			form.name.focus();
 		}
+
 		if (form.nickname.value.length == 0) {
-			alert('이름 써라');
+			alert('nickname 써라');
 			form.nickname.focus();
 		}
+
 		if (form.cellphoneNum.value.length == 0) {
 			alert('cellphoneNum 써라');
 			form.cellphoneNum.focus();
 		}
+
 		if (form.email.value.length == 0) {
 			alert('email 써라');
 			form.email.focus();
 		}
+
 		MemberModify__submitFormDone = true;
 		form.submit();
+
 	}
 </script>
 

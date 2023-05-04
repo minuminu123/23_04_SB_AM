@@ -50,24 +50,9 @@ public class MemberService {
 		return memberRepository.getMemberById(id);
 	}
 
-	public Member getMember(String loginId, String loginPw) {
-		return memberRepository.getMember(loginId, loginPw);
-	}
-
-	public ResultData actorCanModify(int loginedMemberId, Member member) {
-		if (member.getId() != loginedMemberId) {
-			return ResultData.from("F-2", Ut.f("해당 글에 대한 권한이 없습니다"));
-		}
-		return ResultData.from("S-1", "수정 가능");
-	}
-
-	public ResultData modifyMember(int memberId, String loginId, String loginPw) {
-		memberRepository.modifyMember(memberId, loginId, loginPw);
-		
-		Member member = getMember(loginId, loginPw);
-		
-		return ResultData.from("S-1", Ut.f("%s님 회원정보를 수정 했습니다", member.getNickname()), "member", member);
-		
+	public ResultData modify(int id, String loginPw, String name, String nickname, String cellphoneNum, String email) {
+		memberRepository.modify(id,loginPw, name, nickname, cellphoneNum, email);
+		return ResultData.from("S-1", "회원 정보 수정이 완료되었습니다");
 	}
 
 }
