@@ -5,52 +5,56 @@
 <hr />
 
 <section class="mt-8 text-xl">
-	<div class="container mx-auto px-3">
-		<div class="table-box-type-1">
-			<form action="../member/doLogin" method="POST">
-			<input type="hidden" name="afterLoginUri" value="${param.afterLoginUri }" />
-				<table border="1">
-					<colgroup>
-						<col width="200" />
-					</colgroup>
+		<div class="container mx-auto px-3">
+				<div class="table-box-type-1">
+						<form action="../member/doLogin" method="POST">
+								<c:if test="${afterLoginUri == null }">
+								<c:set var="afterLoginUri" value="/"/>
+										<input type="hidden" name="afterLoginUri" value="${param.afterLoginUri }" />
+								</c:if>
 
-					<tbody>
-						<tr>
-							<th>아이디</th>
-							<td>
-								<input class="input input-bordered w-full max-w-xs" autocomplete="off" type="text" placeholder="아이디를 입력해주세요"
-									name="loginId" />
-							</td>
-						</tr>
-						<tr>
-							<th>비밀번호</th>
-							<td>
-								<input class="input input-bordered w-full max-w-xs" autocomplete="off" type="text" placeholder="비밀번호를 입력해주세요"
-									name="loginPw" />
-							</td>
-						</tr>
-						<tr>
-							<th></th>
-							<td>
-								<button type="submit">로그인</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-		</div>
-		<div class="btns">
-			<button class="btn-text-link btn btn-active btn-ghost" type="button" onclick="history.back();">뒤로가기</button>
+								<table border="1">
+										<colgroup>
+												<col width="200" />
+										</colgroup>
 
-			<c:if test="${article.actorCanModify }">
-				<a class="btn-text-link btn btn-active btn-ghost" href="../article/modify?id=${article.id }">수정</a>
-			</c:if>
-			<c:if test="${article.actorCanDelete }">
-				<a class="btn-text-link btn btn-active btn-ghost" onclick="if(confirm('정말 삭제하시겠습니까?')==false) return false;"
-					href="../article/doDelete?id=${article.id }">삭제</a>
-			</c:if>
+										<tbody>
+												<tr>
+														<th>아이디</th>
+														<td>
+																<input class="input input-bordered w-full max-w-xs" autocomplete="off" type="text"
+																		placeholder="아이디를 입력해주세요" name="loginId" />
+														</td>
+												</tr>
+												<tr>
+														<th>비밀번호</th>
+														<td>
+																<input class="input input-bordered w-full max-w-xs" autocomplete="off" type="text"
+																		placeholder="비밀번호를 입력해주세요" name="loginPw" />
+														</td>
+												</tr>
+												<tr>
+														<th></th>
+														<td>
+																<button type="submit">로그인</button>
+														</td>
+												</tr>
+										</tbody>
+								</table>
+						</form>
+				</div>
+				<div class="btns">
+						<button class="btn-text-link btn btn-active btn-ghost" type="button" onclick="history.back();">뒤로가기</button>
+
+						<c:if test="${article.actorCanModify }">
+								<a class="btn-text-link btn btn-active btn-ghost" href="../article/modify?id=${article.id }">수정</a>
+						</c:if>
+						<c:if test="${article.actorCanDelete }">
+								<a class="btn-text-link btn btn-active btn-ghost" onclick="if(confirm('정말 삭제하시겠습니까?')==false) return false;"
+										href="../article/doDelete?id=${article.id }">삭제</a>
+						</c:if>
+				</div>
 		</div>
-	</div>
 </section>
 
 <%@ include file="../common/foot.jspf"%>
