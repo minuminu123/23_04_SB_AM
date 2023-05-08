@@ -18,22 +18,22 @@ public class UsrReactionPointController {
 
 	@RequestMapping("/usr/reactionPoint/doGoodReaction")
 	@ResponseBody
-	public ResultData doGoodReaction(String relTypeCode, int relId, String replaceUri) {
+	public String doGoodReaction(String relTypeCode, int relId, String replaceUri) {
 
 		ResultData actorCanMakeReactionRd = reactionPointService.actorCanMakeReaction(rq.getLoginedMemberId(),
 				relTypeCode, relId);
 
 		if (actorCanMakeReactionRd.isFail()) {
-			return actorCanMakeReactionRd;
+			return rq.jsHistoryBack("F-1", "이미 했음");
 		}
 
 		ResultData rd = reactionPointService.addGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
 
 		if (rd.isFail()) {
-			rq.jsHitoryBack(rd.getMsg(), "좋아요 실패");
+			rq.jsHistoryBack(rd.getMsg(), "좋아요 실패");
 		}
 
-		return rd;
+		return rq.jsReplace(rd.getMsg(), replaceUri);
 	}
 
 	@RequestMapping("/usr/reactionPoint/doBadReaction")
@@ -43,13 +43,13 @@ public class UsrReactionPointController {
 				relTypeCode, relId);
 
 		if (actorCanMakeReactionRd.isFail()) {
-			return rq.jsHitoryBack("F-1", "이미 했음");
+			return rq.jsHistoryBack("F-1", "이미 했음");
 		}
 
 		ResultData rd = reactionPointService.addBadReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
 
 		if (rd.isFail()) {
-			rq.jsHitoryBack(rd.getMsg(), "좋아요 실패");
+			rq.jsHistoryBack(rd.getMsg(), "좋아요 실패");
 		}
 
 		return rq.jsReplace(rd.getMsg(), replaceUri);
@@ -69,7 +69,7 @@ public class UsrReactionPointController {
 		ResultData rd = reactionPointService.deleteGoodReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
 
 		if (rd.isFail()) {
-			rq.jsHitoryBack(rd.getMsg(), "좋아요 취소 실패");
+			rq.jsHistoryBack(rd.getMsg(), "좋아요 취소 실패");
 		}
 
 		return rq.jsReplace(rd.getMsg(), replaceUri);
@@ -89,7 +89,7 @@ public class UsrReactionPointController {
 		ResultData rd = reactionPointService.deleteBadReactionPoint(rq.getLoginedMemberId(), relTypeCode, relId);
 
 		if (rd.isFail()) {
-			rq.jsHitoryBack(rd.getMsg(), "싫어요 취소 실패");
+			rq.jsHistoryBack(rd.getMsg(), "싫어요 취소 실패");
 		}
 
 		return rq.jsReplace(rd.getMsg(), replaceUri);

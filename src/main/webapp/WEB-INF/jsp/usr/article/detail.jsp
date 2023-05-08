@@ -13,10 +13,13 @@
 <script>
 	function ArticleDetail__increaseHitCount() {
 		const localStorageKey = 'article__' + params.id + '__alreadyView';
+
 		if (localStorage.getItem(localStorageKey)) {
 			return;
 		}
+
 		localStorage.setItem(localStorageKey, true);
+
 		$.get('../article/doIncreaseHitCountRd', {
 			id : params.id,
 			ajaxMode : 'Y'
@@ -24,9 +27,11 @@
 			$('.article-detail__hit-count').empty().html(data.data1);
 		}, 'json');
 	}
+
 	$(function() {
 		// 실전코드
 		// 		ArticleDetail__increaseHitCount();
+
 		// 연습코드
 		setTimeout(ArticleDetail__increaseHitCount, 2000);
 	})
@@ -151,18 +156,22 @@
 <!-- 댓글 관련 -->
 <script type="text/javascript">
 	let ReplyWrite__submitFormDone = false;
+
 	function ReplyWrite__submitForm(form) {
 		if (ReplyWrite__submitFormDone) {
 			return;
 		}
 		form.body.value = form.body.value.trim();
+
 		if (form.body.value.length < 3) {
 			alert('3글자 이상 입력하세요');
 			form.body.focus();
 			return;
 		}
+
 		ReplyWrite__submitFormDone = true;
 		form.submit();
+
 	}
 </script>
 
@@ -174,6 +183,7 @@
 				<form action="../reply/doWrite" method="POST" onsubmit="ReplyWrite__submitForm(this); return false;">
 					<input type="hidden" name="relTypeCode" value="article" />
 					<input type="hidden" name="relId" value="${article.id }" />
+					<input type="hidden" name="replaceUri" value="${rq.currentUri }" />
 					<table>
 						<colgroup>
 							<col width="200" />
@@ -243,13 +253,14 @@
 						<td align="left">${reply.body}</td>
 						<td>
 							<c:if test="${reply.actorCanModify }">
-								<a class="btn-text-link btn btn-active btn-ghost" href="../reply/modify?id=${reply.id }">수정</a>
+								<a class="btn-text-link btn btn-active btn-ghost"
+									href="../reply/modify?id=${reply.id }&replaceUri=${rq.encodedCurrentUri}">수정</a>
 							</c:if>
 						</td>
 						<td>
 							<c:if test="${reply.actorCanDelete }">
 								<a class="btn-text-link btn btn-active btn-ghost" onclick="if(confirm('정말 삭제하시겠습니까?')==false) return false;"
-									href="../reply/doDelete?id=${reply.id }">삭제</a>
+									href="../reply/doDelete?id=${reply.id }&replaceUri=${rq.encodedCurrentUri}">삭제</a>
 							</c:if>
 						</td>
 					</tr>
