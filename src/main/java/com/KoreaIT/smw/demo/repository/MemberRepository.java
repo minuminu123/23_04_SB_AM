@@ -76,4 +76,7 @@ public interface MemberRepository {
 			""")
 	void modify(int id, String loginPw, String name, String nickname, String cellphoneNum, String email);
 
+
+
+
 }
