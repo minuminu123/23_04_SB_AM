@@ -28,6 +28,11 @@ public class UsrMemberController {
 		return "usr/member/join";
 	}
 
+	@RequestMapping("/usr/member/admin")
+	public String showAdmin() {
+		return "/usr/member/admin";
+	}
+	
 	@RequestMapping("/usr/member/getLoginIdDup")
 	@ResponseBody
 	public ResultData getLoginIdDup(String loginId) {

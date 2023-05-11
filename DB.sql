@@ -63,12 +63,12 @@ email = 'abcdef@gmail.com';
 INSERT INTO `member` 
 SET regDate = NOW(),
 updateDate = NOW(),
-loginId = 'test1',
-loginPw = 'test1',
+loginId = 'test4',
+loginPw = 'test4',
 `name` = '회원1',
 `nickname` = '회원1',
 cellphoneNum = '01043214321',
-email = 'abcd@gmail.com';
+email = 'thdalsdn999@gmail.com';
 
 INSERT INTO `member` 
 SET regDate = NOW(),
